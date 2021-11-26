@@ -12,7 +12,7 @@ jobs:
       - name: Push to registry
         run: docker push registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }}
   deploy:
-    name: Push Docker image
+    name: Deploy
     needs: [build]
     runs-on: [self-hosted, deploy]
     steps:
