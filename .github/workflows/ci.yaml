@@ -4,23 +4,21 @@ on: [push]
 jobs:
   build:
     name: Build
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v2
       - name: Build docker image
-        run: docker build -t boombox .
+        run: docker build -t registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} .
+      - name: Push to registry
+        run: docker push registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }}
   deploy:
     name: Push Docker image
-    needs: [build]
+    needs: [self-hosted, deploy]
     runs-on: [self-hosted]
     steps:
-      - name: Push to registry
-        run: |
-          docker tag boombox procrastination-team:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
-          docker push procrastination-team:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }}
       - name: Deploy
         if: github.ref == 'refs/heads/master'
         run: |
-          docker tag procrastination-team:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} procrastination-team:5000/boombox:latest && \
+          docker tag registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} registry:5000/boombox:latest && \
           cd /srv/boombox/backend && \
           docker-compose up
