@@ -5,6 +5,7 @@ jobs:
   build:
     name: Build
     runs-on: [self-hosted, build]
+    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - uses: actions/checkout@v2
       - name: Build docker image
@@ -15,9 +16,9 @@ jobs:
     name: Deploy
     needs: [build]
     runs-on: [self-hosted, deploy]
+    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - name: Deploy
-        if: github.ref == 'refs/heads/master'
         run: |
           docker tag registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} registry:5000/boombox:latest && \
           cd /srv/boombox/backend && \
