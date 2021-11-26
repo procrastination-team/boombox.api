@@ -22,4 +22,4 @@ jobs:
         run: |
           docker tag registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} registry:5000/boombox:latest && \
           cd /srv/boombox/backend && \
-          docker-compose up
+          docker-compose up -d
