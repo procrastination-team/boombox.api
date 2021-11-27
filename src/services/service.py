@@ -5,6 +5,9 @@ from . import results
 
 
 class Service(abc.ABC):
+    def __init__(self, auth: str) -> None:
+        self._auth = auth
+
     @abc.abstractmethod
     def search_tracks(self, query: str, offset: int = 0) -> results.Tracks:
         pass
