@@ -1,11 +1,13 @@
 name: CI
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
     name: Build
     runs-on: [self-hosted, build]
-    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - uses: actions/checkout@v2
       - name: Build docker image
@@ -16,11 +18,11 @@ jobs:
     name: Deploy
     needs: [build]
     runs-on: [self-hosted, deploy]
-    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - name: Deploy
         run: |
           docker pull registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
           docker tag registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} registry:5000/boombox:latest && \
+          docker rmi registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
           cd /srv/boombox/backend && \
           docker-compose up -d
