@@ -1,4 +1,3 @@
 from os import environ
 
-CLIENT_ID = environ["CLIENT_ID"]
-CLIENT_SECRET = environ["CLIENT_SECRET"]
+SERVICE_PORT = int(environ.get("SERVICE_PORT", 3333))

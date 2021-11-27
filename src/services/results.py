@@ -10,7 +10,6 @@ class Artist:
 @dataclass
 class Track:
     name: str
-    url: typing.Optional[str]
     artist: Artist
     image_url: str
     duration: int

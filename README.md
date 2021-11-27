@@ -7,8 +7,7 @@
 
 ## Environment variables
 
-- `CLIENT_ID` - client id for spotify oauth
-- `CLIENT_SECRET` - client secret spotify for oauth
+- `SERVICE_PORT` - Port of api .Default: 3333
 
 ## Docker
 
@@ -26,8 +25,5 @@ services:
   boombox:
     image: boombox
     ports:
-      - "8888:8888"
-    environment:
-      CLIENT_ID: 123456789
-      CLIENT_SECRET: abcdef
+      - "3333:3333"
 ```
