@@ -2,3 +2,4 @@ fastapi~=0.70
 pydantic~=1.8
 spotipy~=2.19
 uvicorn~=0.15
+yandex-music~=1.0

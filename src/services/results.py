@@ -20,3 +20,8 @@ class Track:
 
 
 Tracks: typing.TypeAlias = list[Track]
+
+
+@dataclass
+class Audio:
+    content: bytes

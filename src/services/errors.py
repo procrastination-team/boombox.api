@@ -2,7 +2,7 @@ class ServiceError(Exception):
     pass
 
 
-class BadTokenError(Exception):
-    def __init__(self, message: str):
-        description = f"Problems with auth token. {message}"
+class BadTokenError(ServiceError):
+    def __init__(self, reason: str):
+        description = f"Problems with auth token. {reason}"
         super().__init__(description)

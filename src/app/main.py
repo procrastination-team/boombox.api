@@ -1,8 +1,11 @@
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 import services
+
+from .helpers import stream_audio
 
 app = FastAPI()
 bearer = HTTPBearer()
@@ -36,3 +39,27 @@ def search_tracks(
         )
 
     return tracks
+
+
+@app.get("/api/v1/{service_name}/track/", response_class=StreamingResponse)
+def get_track(
+    service_name: services.ServiceName,
+    track_id: str,
+    auth_credentials: HTTPAuthorizationCredentials = Depends(bearer),
+):
+    try:
+        service = services.get(service_name, auth=auth_credentials.credentials)
+        audio = service.get_track(track_id)
+    except services.BadTokenError as exc:
+        msg_err = str(exc)
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=msg_err)
+    except services.BadRequestError as exc:
+        msg_err = str(exc)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=msg_err)
+    except services.ServiceError as exc:
+        msg_err = str(exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=msg_err
+        )
+
+    return StreamingResponse(stream_audio(audio), media_type="audio/mpeg")
