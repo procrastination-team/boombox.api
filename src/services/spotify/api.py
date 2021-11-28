@@ -41,7 +41,12 @@ class SpotifyApi(Service):
             results.Track(
                 id=track["id"],
                 name=track["name"],
-                artist=results.Artist(name=track["album"]["artists"][0]["name"]),
+                artists=results.Artists(
+                    [
+                        results.Artist(name=artist["name"])
+                        for artist in track["artists"]
+                    ]
+                ),
                 image_url=track["album"]["images"][0]["url"],
                 duration=track["duration_ms"],
             )

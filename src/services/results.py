@@ -7,10 +7,14 @@ class Artist:
     name: str
 
 
+Artists = typing.TypeAlias = list[Artist]
+
+
 @dataclass
 class Track:
+    id: str
     name: str
-    artist: Artist
+    artists: Artists
     image_url: str
     duration: int
 
