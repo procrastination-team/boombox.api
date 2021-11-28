@@ -39,6 +39,7 @@ class SpotifyApi(Service):
         tracks = response["tracks"]["items"]
         return [
             results.Track(
+                id=track["id"],
                 name=track["name"],
                 artist=results.Artist(name=track["album"]["artists"][0]["name"]),
                 image_url=track["album"]["images"][0]["url"],
