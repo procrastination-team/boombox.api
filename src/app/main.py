@@ -25,13 +25,15 @@ def search_tracks(
     offset: int = 0,
     auth_credentials: HTTPAuthorizationCredentials = Depends(bearer),
 ):
-    service = services.get(service_name, auth=auth_credentials.credentials)
-
     try:
+        service = services.get(service_name, auth=auth_credentials.credentials)
         tracks = service.search_tracks(q, offset)
     except services.BadTokenError as exc:
         msg_err = str(exc)
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=msg_err)
+    except services.BadRequestError as exc:
+        msg_err = str(exc)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=msg_err)
     except services.ServiceError as exc:
         msg_err = str(exc)
         raise HTTPException(
