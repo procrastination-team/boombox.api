@@ -1,10 +1,18 @@
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 import services
 
 app = FastAPI()
 bearer = HTTPBearer()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/api/v1/{service_name}/search/", response_model=services.results.Tracks)
