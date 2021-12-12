@@ -52,3 +52,7 @@ class SpotifyApi(Service):
             )
             for track in tracks
         ]
+
+    @_handle_api_error
+    def get_track(self, track_id: str) -> results.Audio:
+        raise err.BadRequestError("Should use SDK")
