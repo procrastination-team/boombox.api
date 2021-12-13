@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -21,7 +21,7 @@ app.add_middleware(
 @app.get("/api/v1/{service_name}/search/", response_model=services.results.Tracks)
 def search_tracks(
     service_name: services.ServiceName,
-    q: str,
+    q: str = Query(..., min_length=1),
     offset: int = 0,
     auth_credentials: HTTPAuthorizationCredentials = Depends(bearer),
 ):
