@@ -3,6 +3,8 @@ from http import HTTPStatus
 
 import spotipy
 
+from utils.log import logger
+
 from .. import Service
 from .. import errors as err
 from .. import results
@@ -16,14 +18,21 @@ def _handle_api_error(func):
         except spotipy.SpotifyException as exc:
             match exc.http_status:
                 case HTTPStatus.UNAUTHORIZED:
+                    msg_warn = "Unauthorized access to spotify api"
+                    logger.warning(msg_warn)
+
                     exc_info = exc.msg.split("\n")[-1].strip()
                     raise err.BadTokenError(exc_info)
                 case _:
                     msg_err = "Error from spotify api"
-                    raise err.ServiceError(msg_err) from exc
-        except Exception as exc:
+                    logger.error(msg_err, exc_info=True)
+
+                    raise err.ServiceError(msg_err)
+        except Exception:
             msg_err = "Unhandled error"
-            raise err.ServiceError(msg_err) from exc
+            logger.error(msg_err, exc_info=True)
+
+            raise err.ServiceError(msg_err)
 
     return wrapper
 
@@ -53,6 +62,5 @@ class SpotifyApi(Service):
             for track in tracks
         ]
 
-    @_handle_api_error
     def get_track(self, track_id: str) -> results.Audio:
         raise err.BadRequestError("Should use SDK")

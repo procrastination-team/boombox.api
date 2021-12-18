@@ -4,6 +4,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 import services
+from utils.log import logger
 
 from .helpers import stream_audio
 
@@ -27,6 +28,10 @@ def search_tracks(
 ):
     try:
         service = services.get(service_name, auth=auth_credentials.credentials)
+
+        msg_info = f"Searching tracks for {service_name}"
+        logger.info(msg_info)
+
         tracks = service.search_tracks(q, offset)
     except services.BadTokenError as exc:
         msg_err = str(exc)
@@ -51,6 +56,10 @@ def get_track(
 ):
     try:
         service = services.get(service_name, auth=auth_credentials.credentials)
+
+        msg_info = f"Downloading track for {service_name}"
+        logger.info(msg_info)
+
         audio = service.get_track(track_id)
     except services.BadTokenError as exc:
         msg_err = str(exc)
