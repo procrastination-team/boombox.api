@@ -23,6 +23,6 @@ jobs:
         run: |
           docker pull registry.procrastination-team.com/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
           docker tag registry.procrastination-team.com/boombox:${GITHUB_REF##*/}-${{ github.sha }} boombox:latest && \
-          docker rmi registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
+          docker rmi registry.procrastination-team.com/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
           cd /srv/boombox/backend && \
           docker-compose up -d
