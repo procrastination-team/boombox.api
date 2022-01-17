@@ -11,9 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build docker image
-        run: docker build -t registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} .
+        run: docker build -t registry.procrastination-team.com/boombox:${GITHUB_REF##*/}-${{ github.sha }} .
       - name: Push to registry
-        run: docker push registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }}
+        run: docker push registry.procrastination-team.com/boombox:${GITHUB_REF##*/}-${{ github.sha }}
   deploy:
     name: Deploy
     needs: [build]
@@ -21,8 +21,8 @@ jobs:
     steps:
       - name: Deploy
         run: |
-          docker pull registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
-          docker tag registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} registry:5000/boombox:latest && \
+          docker pull registry.procrastination-team.com/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
+          docker tag registry.procrastination-team.com/boombox:${GITHUB_REF##*/}-${{ github.sha }} boombox:latest && \
           docker rmi registry:5000/boombox:${GITHUB_REF##*/}-${{ github.sha }} && \
           cd /srv/boombox/backend && \
           docker-compose up -d
