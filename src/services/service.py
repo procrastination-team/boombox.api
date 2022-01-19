@@ -18,10 +18,12 @@ class Service(abc.ABC):
 
 
 def get(service_name: str, **kwargs) -> Service:
+    from .apple_music import AppleMusicApi
     from .spotify import SpotifyApi
     from .yandex_music import YandexMusicApi
 
     services = {
+        const.ServiceName.APPLE_MUSIC: AppleMusicApi,
         const.ServiceName.SPOTIFY: SpotifyApi,
         const.ServiceName.YANDEX_MUSIC: YandexMusicApi,
     }
